@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>EnergyMetering</name>
+    </assembly>
+    <members>
+        <member name="M:EnergyMetering.Controllers.EnergyMeterController.GetAll">
+            <summary>
+            Gets all the customer related info [This API is only for reference]
+            </summary>
+            <returns>All the customer related info</returns>
+            <response code="200">Returns the customer details</response>
+        </member>
+        <member name="M:EnergyMetering.Controllers.EnergyMeterController.GetMeterReadings(System.Guid,EnergyMetering.Models.FilterEnergy)">
+            <summary>
+            Gets a specific Meter Reading Information
+            </summary>
+            <returns>Meter Reading info for a given time period</returns>
+            <response code="200">Returns the Meter Reading details</response>
+            <response code="404">No Meter Reading details info found</response>
+        </member>
+        <member name="M:EnergyMetering.Controllers.EnergyMeterController.Post(System.Collections.Generic.List{EnergyMetering.Models.EnergyReportRequest})">
+             <summary>
+             Request for Energy Report
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 [{
+                    "DeliveryEmail": "vineshcool1990@gmail.com",
+                    "MeterId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+                 }]
+            
+             </remarks>
+             <returns>Requested report status</returns>
+             <response code="200">Returns the status and responseid of the requested report</response>
+             <response code="404">No report found for the given details</response>
+        </member>
+    </members>
+</doc>
