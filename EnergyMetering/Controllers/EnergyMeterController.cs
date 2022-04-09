@@ -39,11 +39,7 @@ namespace EnergyMetering.Controllers
         public async Task<IActionResult> GetMeterReadings(Guid MeterId, [FromQuery] FilterEnergy filterEnergy)
         {
             var result = await _energyReportService.FindMeterReadings(MeterId, filterEnergy);
-            if(result.Count() > 0)
-            {
-                return Ok(result);
-            }
-            return NotFound();
+            return Ok(result);
         }
 
         /// <summary>
@@ -65,11 +61,7 @@ namespace EnergyMetering.Controllers
         public async Task<IActionResult> Post([FromBody] List<EnergyReportRequest> energyReport)
         {
             var result = await _energyReportService.RequestEnergyReports(energyReport);
-            if(result.Count() > 0)
-            {
-                return Ok(result);
-            }
-            return NotFound();
+            return Ok(result);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using EnergyMetering.Models;
+﻿using EnergyMetering.Exceptions;
+using EnergyMetering.Models;
 using EnergyMetering.Repository;
 using EnergyMetering.Services;
 using FluentAssertions;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -26,15 +28,13 @@ namespace EnergyMeteringTests
             // Arrange
             Guid meterId = await GenerateInMemoryDB();
             var customer = await _dbContext.Customer.FirstOrDefaultAsync();
-            FilterEnergy filterEnergy = new FilterEnergy();
             EnergyReportService reportService = new EnergyReportService(_dbContext);
 
             // Act
-            var result = await reportService.FindMeterReadings(Guid.NewGuid(), new FilterEnergy());
+            var Act = () => reportService.FindMeterReadings(Guid.NewGuid(), new FilterEnergy());
 
             // Assert
-            result.Should().HaveCount(0);
-            result.Should().NotContain(x => x.Meter_Id == customer.MeterId);
+            await Act.Should().ThrowAsync<NotFoundException>($"No Meter Reading details info found");            
         }
 
         [Fact]
@@ -43,11 +43,10 @@ namespace EnergyMeteringTests
             // Arrange
             Guid meterId = await GenerateInMemoryDB();
             var customer =  await _dbContext.Customer.FirstOrDefaultAsync();
-            FilterEnergy filterEnergy = new FilterEnergy();
-            EnergyReportService reportService = new EnergyReportService(_dbContext);
+            EnergyReportService energyReportService = new EnergyReportService(_dbContext);
 
             // Act
-            var result = await reportService.FindMeterReadings(meterId, new FilterEnergy());    
+            var result = await energyReportService.FindMeterReadings(meterId, new FilterEnergy());    
             
             // Assert
             result.Should().HaveCount(2);
@@ -60,18 +59,19 @@ namespace EnergyMeteringTests
             // Arrange
             Guid meterId = await GenerateInMemoryDB();
             var customer = await _dbContext.Customer.FirstOrDefaultAsync();
-            List<EnergyReportRequest> energyReportList = new List<EnergyReportRequest>()
+            List<EnergyReportRequest> energyReportRequestList = new List<EnergyReportRequest>()
             {
                 new EnergyReportRequest { MeterId = Guid.NewGuid() , DeliveryEmail = customer.DeliveryEmail }
             };
+            var energyReportRequest = energyReportRequestList.FirstOrDefault();
+
             EnergyReportService reportService = new EnergyReportService(_dbContext);
 
             // Act
-            var result = await reportService.RequestEnergyReports(energyReportList);
+            var result = () => reportService.RequestEnergyReports(energyReportRequestList);
 
             // Assert
-            result.Should().HaveCount(0);
-            result.Should().NotContain(x => x.ResponseId == customer.MeterId && x.Status == "Pending");
+            await result.Should().ThrowAsync<NotFoundException>($"The {energyReportRequest?.MeterId} associated withe {energyReportRequest?.DeliveryEmail} does not exist");
         }
 
         [Fact]
@@ -80,14 +80,14 @@ namespace EnergyMeteringTests
             // Arrange
             Guid meterId = await GenerateInMemoryDB();
             var customer = await _dbContext.Customer.FirstOrDefaultAsync();
-            List<EnergyReportRequest> energyReportList = new List<EnergyReportRequest>()
+            List<EnergyReportRequest> energyReportRequestList = new List<EnergyReportRequest>()
             {
                 new EnergyReportRequest { MeterId = meterId, DeliveryEmail = customer.DeliveryEmail }
             };
             EnergyReportService reportService = new EnergyReportService(_dbContext);
 
             // Act
-            var result = await reportService.RequestEnergyReports(energyReportList);
+            var result = await reportService.RequestEnergyReports(energyReportRequestList);
 
             // Assert
             result.Should().HaveCount(1);

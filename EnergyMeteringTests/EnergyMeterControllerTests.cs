@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -30,8 +31,11 @@ namespace EnergyMeteringTests
             // Act
             var result = await controller.GetMeterReadings(meterId, filterEnergy);
 
+
             // Assert
-            result.Should().BeOfType<NotFoundResult>();
+            var okResult =  result.Should().BeOfType<OkObjectResult>().Subject;
+            var historicalList = okResult.Value.Should().BeAssignableTo<List<HistoricalData>>().Subject;
+            historicalList.Count().Should().Be(0);
         }
 
         [Fact]
@@ -55,7 +59,9 @@ namespace EnergyMeteringTests
             var result = await controller.GetMeterReadings(meterId, filterEnergy);
 
             // Assert
-            result.Should().BeOfType<OkObjectResult>();
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var historicalList = okResult.Value.Should().BeAssignableTo<List<HistoricalData>>().Subject;
+            historicalList.Count().Should().Be(1);
         }
 
         [Fact]
@@ -79,7 +85,9 @@ namespace EnergyMeteringTests
             var result = await controller.Post(energyReportRequests);
 
             // Assert
-            result.Should().BeOfType<NotFoundResult>();
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var updatedEnergyReportList = okResult.Value.Should().BeAssignableTo<List<UpdatedEnergyReport>>().Subject;
+            updatedEnergyReportList.Count().Should().Be(0);
         }
 
         [Fact]
@@ -107,7 +115,9 @@ namespace EnergyMeteringTests
             var result = await controller.Post(energyReportRequests);
 
             // Assert
-            result.Should().BeOfType<OkObjectResult>();
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var updatedEnergyReportList = okResult.Value.Should().BeAssignableTo<List<UpdatedEnergyReport>>().Subject;
+            updatedEnergyReportList.Count().Should().Be(1);
         }
     }
 }

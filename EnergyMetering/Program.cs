@@ -1,3 +1,4 @@
+using EnergyMetering.Exceptions;
 using EnergyMetering.Repository;
 using EnergyMetering.Services;
 using Microsoft.EntityFrameworkCore;
@@ -37,6 +38,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<CustomExceptionMiddleware>();
 
 app.MapControllers();
 
