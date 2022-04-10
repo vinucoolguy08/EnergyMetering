@@ -44,9 +44,10 @@ namespace EnergyMeteringTests
             Guid meterId = await GenerateInMemoryDB();
             var customer =  await _dbContext.Customer.FirstOrDefaultAsync();
             EnergyReportService energyReportService = new EnergyReportService(_dbContext);
+            var filterEnergy = new FilterEnergy {  FromDate = DateTime.Now.AddDays(-1), ToDate = DateTime.Now.AddDays(1) };
 
             // Act
-            var result = await energyReportService.FindMeterReadings(meterId, new FilterEnergy());    
+            var result = await energyReportService.FindMeterReadings(meterId, filterEnergy);    
             
             // Assert
             result.Should().HaveCount(2);
@@ -120,28 +121,49 @@ namespace EnergyMeteringTests
                  {
                      Id = 1,
                      Kilowatt = 12.5,
-                     TimeStamp = DateTime.Now.AddDays(-1),
+                     TimeStamp = DateTime.Now.AddDays(-2),
                      CustomerId = 1
                  },
                 new MeterReading
                 {
                     Id = 2,
+                    Kilowatt = 12.5,
+                    TimeStamp = DateTime.Now.AddDays(-1),
+                    CustomerId = 1
+                },
+                new MeterReading
+                {
+                    Id = 3,
+                    Kilowatt = 22.5,
+                    TimeStamp = DateTime.Now,
+                    CustomerId = 1,
+                },
+                new MeterReading
+                {
+                    Id = 4,
+                    Kilowatt = 22.5,
+                    TimeStamp = DateTime.Now.AddDays(1),
+                    CustomerId = 1,
+                },
+                new MeterReading
+                {
+                    Id = 5,
                     Kilowatt = 22.5,
                     TimeStamp = DateTime.Now.AddDays(2),
                     CustomerId = 1,
                 },
                 new MeterReading
                 {
-                    Id = 3,
+                    Id = 6,
                     Kilowatt = 22.5,
-                    TimeStamp = DateTime.Now.AddDays(-1),
+                    TimeStamp = DateTime.Now.AddDays(3),
                     CustomerId = 2,
                 },
                 new MeterReading
                 {
-                    Id = 4,
+                    Id = 7,
                     Kilowatt = 22.5,
-                    TimeStamp = DateTime.Now.AddDays(2),
+                    TimeStamp = DateTime.Now.AddDays(4),
                     CustomerId = 2,
                 });
 

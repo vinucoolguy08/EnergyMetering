@@ -34,32 +34,53 @@ namespace EnergyMetering.Repository
             );
 
             modelBuilder.Entity<MeterReading>().HasData(
+                 new MeterReading
+                 {
+                     Id = 1,
+                     Kilowatt = 12.5,
+                     TimeStamp = DateTime.Now.AddDays(-2),
+                     CustomerId = 1
+                 },
                 new MeterReading
                 {
-                    Id = 1,
+                    Id = 2,
                     Kilowatt = 12.5,
                     TimeStamp = DateTime.Now.AddDays(-1),
                     CustomerId = 1
                 },
                 new MeterReading
                 {
-                    Id = 2,
+                    Id = 3,
+                    Kilowatt = 22.5,
+                    TimeStamp = DateTime.Now,
+                    CustomerId = 1,
+                },
+                new MeterReading
+                {
+                    Id = 4,
+                    Kilowatt = 22.5,
+                    TimeStamp = DateTime.Now.AddDays(1),
+                    CustomerId = 1,
+                },
+                new MeterReading
+                {
+                    Id = 5,
                     Kilowatt = 22.5,
                     TimeStamp = DateTime.Now.AddDays(2),
                     CustomerId = 1,
                 },
                 new MeterReading
                 {
-                    Id = 3,
+                    Id = 6,
                     Kilowatt = 22.5,
-                    TimeStamp = DateTime.Now.AddDays(-1),
+                    TimeStamp = DateTime.Now.AddDays(3),
                     CustomerId = 2,
                 },
                 new MeterReading
                 {
-                    Id = 4,
+                    Id = 7,
                     Kilowatt = 22.5,
-                    TimeStamp = DateTime.Now.AddDays(2),
+                    TimeStamp = DateTime.Now.AddDays(4),
                     CustomerId = 2,
                 }
             );

@@ -24,7 +24,7 @@ namespace EnergyMetering.Services
         {
             var meterReadingsList = await _context.Customer.Include(x => x.MeterReadings).Where(x => x.MeterId.Equals(MeterId)).SelectMany(x => x.MeterReadings).ToListAsync();
 
-            var result = meterReadingsList.Where(x => x.TimeStamp >= filterEnergy.FromDate && filterEnergy.ToDate <= x.TimeStamp).Select(x => new HistoricalData { Meter_Id = MeterId, KiloWatt = x.Kilowatt, Timestamp = x.TimeStamp }).ToList();
+            var result = meterReadingsList.Where(x => x.TimeStamp >= filterEnergy.FromDate && x.TimeStamp <= filterEnergy.ToDate).Select(x => new HistoricalData { Meter_Id = MeterId, KiloWatt = x.Kilowatt, Timestamp = x.TimeStamp }).ToList();
 
             if (!result.Any())
             {
