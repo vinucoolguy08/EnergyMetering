@@ -22,6 +22,7 @@ namespace EnergyMetering.Controllers
         /// <returns>All the customer related info</returns>
         /// <response code="200">Returns the customer details</response>
         [HttpGet("GetAll")]
+        [ProducesResponseType(200, Type = typeof(List<Customer>))]
         public async Task<IActionResult> GetAll()
         {
             var result = await _energyReportService.GetEnergyReport();
@@ -36,6 +37,7 @@ namespace EnergyMetering.Controllers
         /// <response code="200">Returns the Meter Reading details</response>
         /// <response code="404">No Meter Reading details info found</response>
         [HttpGet("MeterReadings/{MeterId}")]
+        [ProducesResponseType(200, Type = typeof(List<HistoricalData>))]
         public async Task<IActionResult> GetMeterReadings(Guid MeterId, [FromQuery] FilterEnergy filterEnergy)
         {
             var result = await _energyReportService.FindMeterReadings(MeterId, filterEnergy);
@@ -58,6 +60,7 @@ namespace EnergyMetering.Controllers
         /// <response code="200">Returns the status and responseid of the requested report</response>
         /// <response code="404">No report found for the given details</response>
         [HttpPost("RequestEnergyReports")]
+        [ProducesResponseType(200, Type = typeof(List<UpdatedEnergyReport>))]
         public async Task<IActionResult> Post([FromBody] List<EnergyReportRequest> energyReport)
         {
             var result = await _energyReportService.RequestEnergyReports(energyReport);
